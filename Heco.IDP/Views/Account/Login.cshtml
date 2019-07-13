@@ -1,0 +1,92 @@
+@model LoginViewModel
+
+<div class="container-login100">
+
+    @Html.Partial("_ValidationSummary")
+
+    <div class="wrap-login100">
+
+        @if (Model.EnableLocalLogin)
+        {
+
+            <form class="login100-form validate-form" asp-route="Login">
+                <input type="hidden" asp-for="ReturnUrl" />
+                <span class="login100-form-title p-b-43">
+                    Login to continue
+                </span>
+                <fieldset>
+
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" asp-for="Username" type="text" name="Username" autofocus>
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">Email</span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" asp-for="Password" type="password" name="Password">
+                        <span class="focus-input100"></span>
+                        <span class="label-input100">Password</span>
+                    </div>
+
+                    @if (Model.AllowRememberLogin)
+                    {
+                        <div class="form-group login-remember">
+                            <label asp-for="RememberLogin">
+                                <input asp-for="RememberLogin">
+                                <strong>Remember My Login</strong>
+                            </label>
+                        </div>
+                    }
+
+                    <div class="text-center p-t-46 p-b-20">
+                        <a asp-action="RegisterUser"
+                           asp-controller="UserRegistration"
+                           asp-route-returnUrl="@Model.ReturnUrl">
+                            Haven't got an account yet?  Click here.
+                        </a>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn">Login</button>
+                    </div>
+                </fieldset>
+
+                <div class="text-center p-t-46 p-b-20">
+                    <span class="txt2">
+                        or sign up using
+                    </span>
+                </div>
+                @if (Model.VisibleExternalProviders.Any())
+                {
+                    var a = Model.VisibleExternalProviders.Select(select => select.DisplayName).ToList();
+                    <div class="login100-form-social flex-c-m">
+                        <ul class="list-inline">
+
+                            @if (a.Contains("Facebook"))
+                            {
+                                <a class="login100-form-social-item flex-c-m bg1 m-r-5" asp-controller="External" asp-action="Challenge" asp-route-provider="Facebook" asp-route-returnUrl="@Model.ReturnUrl">
+                                    <i class="fa fa-facebook-f" aria-hidden="true"></i>
+                                </a>
+                            }
+                            @if (a.Contains("Twitter"))
+                            {
+                                <a class="login100-form-social-item flex-c-m bg2 m-r-5" asp-controller="External" asp-action="Challenge" asp-route-provider="Twitter" asp-route-returnUrl="@Model.ReturnUrl">
+                                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                                </a>
+                            }
+                        </ul>
+                    </div>
+                }
+            </form>
+        }
+        <div class="login100-more"></div>
+
+        @if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
+        {
+            <div class="alert alert-warning">
+                <strong>Invalid login request</strong>
+                There are no login schemes configured for this client.
+            </div>
+        }
+    </div>
+</div>
